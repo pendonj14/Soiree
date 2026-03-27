@@ -1,0 +1,27 @@
+{
+  "name": "sorier",
+  "version": "1.0.0",
+  "description": "A backend for restaurant reservation system",
+  "homepage": "https://github.com/pendonj14/Soreir#readme",
+  "bugs": {
+    "url": "https://github.com/pendonj14/Soreir/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pendonj14/Soreir.git"
+  },
+  "license": "ISC",
+  "author": "pendolini",
+  "type": "module",
+  "main": "backend/src/index.js",
+  "scripts": {
+    "start": "node backend/src/index.js",
+    "dev": "nodemon backend/src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.3",
+    "nodemon": "^3.1.14"
+  }
+}
