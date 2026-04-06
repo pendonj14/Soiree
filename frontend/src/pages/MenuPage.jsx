@@ -54,56 +54,55 @@ export const MenuPage = () => {
   const [activeCategory, setActiveCategory] = useState('MAKI');
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-[#0a0a0a] font-sans text-white">
-      
-      {/* LEFT COLUMN: Sticky Hero Section */}
-      <div className="w-full md:w-[45%] lg:w-[50%] relative h-[50vh] md:h-screen sticky top-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/menuside.png')" }} // Replace with your image
-        >
-          {/* Gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 md:bg-gradient-to-r md:from-transparent md:to-[#0a0a0a]"></div>
-        </div>
-        
-        <Navbar />
-        
-        <h1 className="absolute bottom-8 left-8 text-7xl md:text-8xl lg:text-9xl font-serif text-[#f4ecd8] tracking-tight">
-          MENU
-        </h1>
-      </div>
+    <div className="h-screen bg-[#0a0a0a] p-4 font-sans text-white">
+      <div className="grid grid-cols-4 grid-rows-4 gap-4 h-full">
 
-      {/* RIGHT COLUMN: Scrollable Menu Content */}
-      <div className="w-full md:w-[55%] lg:w-[60%] flex flex-col items-center py-16 px-6 md:px-12 lg:px-24">
-        
-        {/* Category Navigation Pills */}
-        <div className="flex items-center gap-2 md:gap-4 mb-8 bg-white/5 p-1 rounded-full border border-white/10">
-          {['MAKI', 'URAMAKI', 'SPECIAL ROLLS'].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-6 py-2 rounded-full text-xs tracking-widest transition-all duration-300 ${
-                activeCategory === cat 
-                  ? 'bg-white text-black' 
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* LEFT HALF: Hero Image */}
+        <div className="col-span-2 row-span-4 relative rounded-3xl overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/menuside.png')" }}
+          >
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20"></div>
+          </div>
+          <h1 className="absolute bottom-8 left-8 text-8xl lg:text-9xl font-serif text-[#f4ecd8] tracking-tight">
+            MENU
+          </h1>
         </div>
 
-        {/* Menu Items List */}
-        <div className="w-full max-w-2xl flex flex-col gap-8 pb-24">
-          <MenuSectionTitle title="MAKI" />
-          {MENU_DATA.maki.map((item) => (
-            <MenuItem key={item.id} {...item} />
-          ))}
+        {/* RIGHT HALF: Menu Content */}
+        <div className="col-span-2 row-span-4 rounded-3xl bg-white/5 border border-white/10 flex flex-col items-center py-10 px-8 overflow-y-auto">
 
-          <MenuSectionTitle title="URAMAKI" />
-          {MENU_DATA.uramaki.map((item) => (
-            <MenuItem key={item.id} {...item} />
-          ))}
+          {/* Category Pills */}
+          <div className="flex items-center gap-2 mb-8 bg-white/5 p-1 rounded-full border border-white/10 shrink-0">
+            {['MAKI', 'URAMAKI', 'SPECIAL ROLLS'].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-5 py-2 rounded-full text-xs tracking-widest transition-all duration-300 ${
+                  activeCategory === cat
+                    ? 'bg-white text-black'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Menu Items */}
+          <div className="w-full flex flex-col gap-8">
+            <MenuSectionTitle title="MAKI" />
+            {MENU_DATA.maki.map((item) => (
+              <MenuItem key={item.id} {...item} />
+            ))}
+
+            <MenuSectionTitle title="URAMAKI" />
+            {MENU_DATA.uramaki.map((item) => (
+              <MenuItem key={item.id} {...item} />
+            ))}
+          </div>
+
         </div>
 
       </div>

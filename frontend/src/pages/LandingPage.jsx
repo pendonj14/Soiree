@@ -26,7 +26,6 @@ export const LandingPage = () => {
           {/* Gradient overlay to ensure text pops against the background */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30"></div>
           
-          <Navbar />
           
           {/* Main Typography */}
           <h1 className="relative z-10 text-6xl md:text-8xl lg:text-[10rem] font-serif leading-[0.9] tracking-tight text-[#f4ecd8] pb-4">
