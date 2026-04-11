@@ -23,9 +23,14 @@ const reservationSchema = new Schema(
             required: true,
         },
 
-        orderedItem:{
+        guestName: {
             type: String,
             required: true,
+        },
+
+        orderedItem:{
+            type: String,
+            default: "",
         }
     },
     {

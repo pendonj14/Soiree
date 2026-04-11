@@ -17,10 +17,10 @@ export const authService = {
       body: JSON.stringify({ email, password }),
     }),
 
-  register: (username, email, password) =>
+  register: (firstName, lastName, username, email, password) =>
     request('/users/register', {
       method: 'POST',
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ firstName, lastName, username, email, password }),
     }),
 
   logout: (email) =>

@@ -1,69 +1,112 @@
 import { Reservation } from "../models/reservation.model.js";
+import { User } from "../models/user.model.js";
 
 const createReservation = async (req, res, next) => {
     try {
-        const {reservationDate, reservationTime, numberOfGuests, orderedItem} = req.body;
+        const { reservationDate, reservationTime, numberOfGuests, orderedItem } = req.body;
 
-        //basic validation
-        if (!reservationDate || !reservationTime || !numberOfGuests || !orderedItem) {
-            return res.status(400).json({message: "All fields are required"});
+        if (!reservationDate) {
+            return res.status(400).json({ message: "Reservation date is required" });
+        }
+        if (!reservationTime) {
+            return res.status(400).json({ message: "Reservation time is required" });
+        }
+        if (!numberOfGuests || numberOfGuests < 1) {
+            return res.status(400).json({ message: "Number of guests must be at least 1" });
         }
 
-        //create new reservation
-        const reservation  = await  Reservation.create({
-            user: req.user.id, // associate reservation with the logged-in user
-            reservationDate,
+        const parsedDate = new Date(reservationDate);
+        if (isNaN(parsedDate.getTime())) {
+            return res.status(400).json({ message: "Invalid reservation date" });
+        }
+        if (parsedDate < new Date().setHours(0, 0, 0, 0)) {
+            return res.status(400).json({ message: "Reservation date cannot be in the past" });
+        }
+
+        // Fetch user to auto-populate guest name
+        const user = await User.findById(req.user.id).select("firstName lastName");
+        if (!user) {
+            return res.status(404).json({ message: "User account not found" });
+        }
+
+        const guestName = `${user.firstName} ${user.lastName}`;
+
+        const reservation = await Reservation.create({
+            user: req.user.id,
+            guestName,
+            reservationDate: parsedDate,
             reservationTime,
-            numberOfGuests,
-            orderedItem
+            numberOfGuests: Number(numberOfGuests),
+            orderedItem: orderedItem || "",
         });
-        const populated = await reservation.populate("user", "email username");
-        res.status(201).json({message: "Reservation created successfully", reservation});
+
+        await reservation.populate("user", "firstName lastName email username");
+
+        res.status(201).json({
+            message: "Reservation created successfully",
+            reservation,
+        });
 
     } catch (error) {
         next(error);
     }
-}
+};
 
-const getReservations = async (req, res, next) => {
+const getReservations = async (_req, res, next) => {
     try {
-        const reservations = await Reservation.find().populate("user", "email username");
-        res.status(200).json({message: "Reservations retrieved successfully", reservations});
+        const reservations = await Reservation.find()
+            .populate("user", "firstName lastName email username")
+            .sort({ reservationDate: 1 });
+
+        res.status(200).json({
+            message: "Reservations retrieved successfully",
+            reservations,
+        });
     } catch (error) {
         next(error);
     }
-}
-
+};
 
 const updateReservation = async (req, res, next) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
-        const updatedReservation = await Reservation.findByIdAndUpdate(id, req.body, {returnDocument: "after", runValidators: true});
+        const updatedReservation = await Reservation.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true, runValidators: true }
+        ).populate("user", "firstName lastName email username");
+
         if (!updatedReservation) {
-            return res.status(404).json({message: "Reservation not found"});
+            return res.status(404).json({ message: "Reservation not found" });
         }
 
-        res.status(200).json({message: "Reservation updated successfully", reservation: updatedReservation});
+        res.status(200).json({
+            message: "Reservation updated successfully",
+            reservation: updatedReservation,
+        });
 
     } catch (error) {
         next(error);
     }
-}
+};
 
 const deleteReservation = async (req, res, next) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const deletedReservation = await Reservation.findByIdAndDelete(id);
         if (!deletedReservation) {
-            return res.status(404).json({message: "Reservation not found"});
+            return res.status(404).json({ message: "Reservation not found" });
         }
 
-        res.status(200).json({message: "Reservation deleted successfully", reservation: deletedReservation});
+        res.status(200).json({
+            message: "Reservation deleted successfully",
+            reservation: deletedReservation,
+        });
     } catch (error) {
         next(error);
     }
-}
+};
 
 export { createReservation, getReservations, updateReservation, deleteReservation };

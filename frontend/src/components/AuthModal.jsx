@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 export const AuthModal = ({ onClose, redirectTo }) => {
   const [tab, setTab] = useState('login');
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', username: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
@@ -41,9 +41,9 @@ export const AuthModal = ({ onClose, redirectTo }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await register(form.username, form.email, form.password);
+      await register(form.firstName, form.lastName, form.username, form.email, form.password);
       setSuccessMsg('Account created — please sign in.');
-      setForm({ username: '', email: form.email, password: '' });
+      setForm({ firstName: '', lastName: '', username: '', email: form.email, password: '' });
       setTab('login');
     } catch (err) {
       setError(err.message);
@@ -111,19 +111,43 @@ export const AuthModal = ({ onClose, redirectTo }) => {
           className="flex flex-col gap-4"
         >
           {tab === 'register' && (
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] uppercase tracking-widest text-[#d8d3c5]/50">
-                Username
-              </label>
-              <input
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                placeholder="Your name"
-                required
-                className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 placeholder-gray-600 focus:border-white/30 focus:outline-none transition-colors"
-              />
-            </div>
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase tracking-widest text-[#d8d3c5]/50">First Name</label>
+                  <input
+                    name="firstName"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    placeholder="Jane"
+                    required
+                    className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 placeholder-gray-600 focus:border-white/30 focus:outline-none transition-colors"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] uppercase tracking-widest text-[#d8d3c5]/50">Last Name</label>
+                  <input
+                    name="lastName"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    placeholder="Smith"
+                    required
+                    className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 placeholder-gray-600 focus:border-white/30 focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] uppercase tracking-widest text-[#d8d3c5]/50">Username</label>
+                <input
+                  name="username"
+                  value={form.username}
+                  onChange={handleChange}
+                  placeholder="janesmith"
+                  required
+                  className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 placeholder-gray-600 focus:border-white/30 focus:outline-none transition-colors"
+                />
+              </div>
+            </>
           )}
 
           <div className="flex flex-col gap-1.5">
