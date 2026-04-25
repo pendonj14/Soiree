@@ -1,0 +1,107 @@
+<h2>Full Design Overview</h2>
+<p class="subtitle">Responsive layout + Framer Motion wipe across all pages. Review each section — let me know if anything needs adjusting.</p>
+
+<!-- SECTION 1: Route Transition -->
+<div class="section">
+  <h3>1 — Route Transition (Framer Motion)</h3>
+  <p class="subtitle">Right-to-left wipe: new page enters from right, old page exits to left simultaneously.</p>
+  <div style="display:flex;gap:16px;align-items:center;background:#111;padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.07);margin-top:12px;">
+    <div style="flex:1;height:60px;background:rgba(212,204,182,0.12);border-radius:8px;border:1px solid rgba(212,204,182,0.2);display:flex;align-items:center;justify-content:center;color:#d4ccb6;font-size:10px;letter-spacing:2px;transform:translateX(-6px);opacity:0.5;">← EXIT OLD</div>
+    <div style="color:#555;font-size:20px;">|</div>
+    <div style="flex:1;height:60px;background:rgba(212,204,182,0.2);border-radius:8px;border:1px solid rgba(212,204,182,0.3);display:flex;align-items:center;justify-content:center;color:#d4ccb6;font-size:10px;letter-spacing:2px;">ENTER NEW →</div>
+  </div>
+  <p style="margin-top:8px;color:#666;font-size:12px;">Implementation: <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#aaa;">AnimatePresence</code> wraps <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#aaa;">Routes</code> in App.jsx · Each page wrapped in a shared <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#aaa;">PageTransition</code> component · Duration 400ms, smooth ease curve</p>
+</div>
+
+<!-- SECTION 2: Bottom Nav -->
+<div class="section">
+  <h3>2 — Bottom Navigation Bar (mobile only, hidden on md+)</h3>
+  <div style="display:flex;gap:24px;align-items:flex-start;margin-top:12px;flex-wrap:wrap;">
+    <div style="background:#111;border-radius:16px;border:1px solid rgba(255,255,255,0.07);padding:12px;width:200px;">
+      <div style="background:#0c0c0c;border-radius:10px;height:120px;position:relative;overflow:hidden;margin-bottom:8px;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);display:flex;align-items:flex-end;padding:8px;">
+          <span style="color:#d4ccb6;font-size:18px;font-family:serif;letter-spacing:2px;">SOIRÉE</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-around;background:#111;border-top:1px solid rgba(255,255,255,0.08);padding:10px 0;border-radius:0 0 10px 10px;">
+        <div style="text-align:center;"><div style="font-size:16px;">🏠</div><div style="color:#d4ccb6;font-size:7px;letter-spacing:2px;margin-top:2px;">HOME</div></div>
+        <div style="text-align:center;"><div style="font-size:16px;">🍱</div><div style="color:#777;font-size:7px;letter-spacing:2px;margin-top:2px;">MENU</div></div>
+        <div style="text-align:center;"><div style="font-size:16px;">📅</div><div style="color:#777;font-size:7px;letter-spacing:2px;margin-top:2px;">BOOK</div></div>
+        <div style="text-align:center;"><div style="font-size:16px;">ℹ️</div><div style="color:#777;font-size:7px;letter-spacing:2px;margin-top:2px;">ABOUT</div></div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px;">
+      <ul style="color:#aaa;font-size:13px;line-height:2;list-style:none;padding:0;">
+        <li>✦ Fixed at bottom, <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#aaa;">z-50</code></li>
+        <li>✦ Active route icon highlighted in <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#d4ccb6;">#d4ccb6</code>, others dimmed</li>
+        <li>✦ Frosted glass background (<code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#aaa;">backdrop-blur</code>)</li>
+        <li>✦ Desktop NavBar remains unchanged on <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#aaa;">md+</code></li>
+        <li>✦ Pages get <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#aaa;">pb-20 md:pb-0</code> so content isn't hidden behind the bar</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: Page Layouts -->
+<div class="section">
+  <h3>3 — Responsive Page Layouts</h3>
+  <div class="split" style="flex-wrap:wrap;gap:12px;">
+
+    <div class="mockup" style="flex:1;min-width:180px;">
+      <div class="mockup-header">LandingPage — minor tweaks</div>
+      <div class="mockup-body" style="background:#0c0c0c;padding:10px;font-size:10px;color:#888;">
+        <div style="background:rgba(212,204,182,0.08);border-radius:6px;padding:6px;margin-bottom:4px;color:#d4ccb6;font-size:9px;">Video hero (full width on mobile)</div>
+        <div style="display:flex;gap:4px;">
+          <div style="flex:1;background:rgba(212,204,182,0.05);border-radius:4px;padding:4px;font-size:8px;text-align:center;">Menu</div>
+          <div style="flex:1;background:rgba(212,204,182,0.05);border-radius:4px;padding:4px;font-size:8px;text-align:center;">Reserve</div>
+          <div style="flex:1;background:rgba(212,204,182,0.05);border-radius:4px;padding:4px;font-size:8px;text-align:center;">About</div>
+        </div>
+        <div style="margin-top:6px;color:#555;font-size:8px;">SideCards → row on sm, stacked on xs</div>
+      </div>
+    </div>
+
+    <div class="mockup" style="flex:1;min-width:180px;">
+      <div class="mockup-header">MenuPage — stacks on mobile</div>
+      <div class="mockup-body" style="background:#0c0c0c;padding:10px;">
+        <div style="background:rgba(212,204,182,0.08);border-radius:6px;padding:8px;margin-bottom:4px;color:#d4ccb6;font-size:9px;text-align:center;">Hero image (top, 40vh on mobile)</div>
+        <div style="background:rgba(212,204,182,0.05);border-radius:6px;padding:8px;color:#888;font-size:9px;">Scrollable menu list (below)</div>
+        <div style="margin-top:6px;color:#555;font-size:8px;">md: side-by-side · lg: 4-col grid</div>
+      </div>
+    </div>
+
+    <div class="mockup" style="flex:1;min-width:180px;">
+      <div class="mockup-header">AboutPage — stacks on mobile</div>
+      <div class="mockup-body" style="background:#0c0c0c;padding:10px;">
+        <div style="background:rgba(212,204,182,0.08);border-radius:6px;padding:8px;margin-bottom:4px;color:#d4ccb6;font-size:9px;text-align:center;">ABOUT hero image</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px;">
+          <div style="background:rgba(212,204,182,0.05);border-radius:4px;padding:4px;font-size:8px;color:#888;text-align:center;">Story</div>
+          <div style="background:rgba(212,204,182,0.05);border-radius:4px;padding:4px;font-size:8px;color:#888;text-align:center;">Awards</div>
+        </div>
+        <div style="color:#555;font-size:8px;">lg: full 6-col bento grid</div>
+      </div>
+    </div>
+
+    <div class="mockup" style="flex:1;min-width:180px;">
+      <div class="mockup-header">ReservationPage — stacks on mobile</div>
+      <div class="mockup-body" style="background:#0c0c0c;padding:10px;">
+        <div style="background:rgba(212,204,182,0.08);border-radius:6px;padding:8px;margin-bottom:4px;color:#d4ccb6;font-size:9px;text-align:center;">BOOK A TABLE image (top)</div>
+        <div style="background:rgba(212,204,182,0.05);border-radius:6px;padding:8px;color:#888;font-size:9px;">Reservation form (below)</div>
+        <div style="margin-top:6px;color:#555;font-size:8px;">md+: side-by-side columns</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION 4: Tech summary -->
+<div class="section">
+  <h3>4 — What gets added / changed</h3>
+  <ul style="color:#aaa;font-size:13px;line-height:2;list-style:none;padding:0;">
+    <li>✦ <strong style="color:#d4ccb6;">New dependency</strong>: <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;">framer-motion</code></li>
+    <li>✦ <strong style="color:#d4ccb6;">New component</strong>: <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;">PageTransition.jsx</code> — wraps every page in motion.div</li>
+    <li>✦ <strong style="color:#d4ccb6;">New component</strong>: <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;">BottomNav.jsx</code> — mobile sticky nav bar</li>
+    <li>✦ <strong style="color:#d4ccb6;">Modified</strong>: <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;">App.jsx</code> — AnimatePresence + location key</li>
+    <li>✦ <strong style="color:#d4ccb6;">Modified</strong>: <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;">NavBar.jsx</code> — hidden on mobile (md:flex)</li>
+    <li>✦ <strong style="color:#d4ccb6;">Modified</strong>: All 4 pages — responsive Tailwind breakpoints</li>
+  </ul>
+</div>
