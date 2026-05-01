@@ -4,7 +4,6 @@ import { AuthProvider } from './context/AuthContext'
 import { LandingPage } from './pages/LandingPage'
 import { MenuPage } from './pages/MenuPage'
 import { Navbar } from './components/NavBar'
-import { BottomNav } from './components/BottomNav'
 import { AboutPage } from './pages/AboutPage'
 import { ReservationPage } from './pages/ReservationPage'
 
@@ -35,7 +34,6 @@ function App() {
           <div className="relative z-10 min-h-screen overflow-x-hidden">
             <Navbar />
             <AnimatedRoutes />
-            <BottomNav />
           </div>
 
         </div>

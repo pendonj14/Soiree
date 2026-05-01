@@ -58,7 +58,7 @@ export const AuthModal = ({ onClose, redirectTo }) => {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0c0c0c] p-10 shadow-2xl"
+        className="relative max-h-[calc(100svh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-[#0c0c0c] p-6 shadow-2xl sm:p-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -112,7 +112,7 @@ export const AuthModal = ({ onClose, redirectTo }) => {
         >
           {tab === 'register' && (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] uppercase tracking-widest text-[#d8d3c5]/50">First Name</label>
                   <input
