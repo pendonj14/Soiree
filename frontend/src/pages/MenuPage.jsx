@@ -19,20 +19,20 @@ export const MenuPage = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen p-4 font-sans text-white pb-20 md:pb-4">
+      <div className="min-h-screen p-3 font-sans text-white sm:p-4">
 
         {/* Mobile/tablet: stacked. lg: 4-col grid */}
-        <div className="flex flex-col md:flex-row lg:grid lg:grid-cols-4 lg:grid-rows-4 gap-4 h-auto lg:h-[calc(100vh-2rem)]">
+        <div className="flex h-auto flex-col gap-4 md:flex-row lg:grid lg:h-[calc(100vh-2rem)] lg:grid-cols-4 lg:grid-rows-4">
 
           {/* Hero Image */}
-          <div className="md:w-1/2 lg:w-auto lg:col-span-2 lg:row-span-4 relative rounded-3xl overflow-hidden h-[40vh] md:h-auto">
+          <div className="relative h-[42svh] min-h-[22rem] overflow-hidden rounded-3xl md:h-auto md:w-1/2 lg:col-span-2 lg:row-span-4 lg:min-h-0 lg:w-auto">
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
               style={{ backgroundImage: "url('/menuside.png')" }}
             >
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20"></div>
             </div>
-            <h1 className="absolute bottom-8 left-8 text-7xl sm:text-8xl lg:text-9xl font-serif text-[#f4ecd8] tracking-tight">
+            <h1 className="absolute bottom-8 left-6 font-serif text-6xl tracking-tight text-[#f4ecd8] sm:left-8 sm:text-8xl lg:text-9xl">
               MENU
             </h1>
           </div>
@@ -40,16 +40,16 @@ export const MenuPage = () => {
           {/* Menu Content */}
           <div
             ref={scrollContainerRef}
-            className="md:w-1/2 lg:w-auto lg:col-span-2 lg:row-span-4 rounded-3xl border border-white/10 bg-transparent flex flex-col items-center py-10 px-4 sm:px-8 overflow-y-auto"
+            className="flex flex-col items-center overflow-y-auto rounded-3xl border border-white/10 bg-transparent px-4 py-8 sm:px-8 sm:py-10 md:w-1/2 lg:col-span-2 lg:row-span-4 lg:w-auto"
           >
 
             {/* Category Buttons */}
-            <div className="flex flex-wrap items-center gap-3 mb-8 shrink-0 justify-center">
+            <div className="mb-8 flex w-full shrink-0 flex-wrap items-center justify-center gap-3 lg:w-auto">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => scrollToCategory(cat)}
-                  className="px-4 sm:px-6 py-2 rounded-lg text-xs tracking-widest uppercase border border-white/30 bg-transparent text-white hover:border-white transition-all duration-300"
+                  className="shrink-0 rounded-lg border border-white/30 bg-transparent px-4 py-2 text-xs uppercase tracking-widest text-white transition-all duration-300 hover:border-white sm:px-6"
                 >
                   {cat}
                 </button>
@@ -57,7 +57,7 @@ export const MenuPage = () => {
             </div>
 
             {/* All categories and their items */}
-            <div className="w-full flex flex-col gap-12 px-4 sm:px-10 lg:px-25">
+            <div className="flex w-full flex-col gap-10 px-0 sm:gap-12 sm:px-10 lg:px-25">
               {loading && <p className="text-white/40 text-sm">Loading...</p>}
               {categories.map((cat) => (
                 <div
