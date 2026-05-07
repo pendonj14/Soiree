@@ -1,7 +1,6 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { authService } from '../services/authService';
-
-const AuthContext = createContext(null);
+import { AuthContext } from './authContextDef';
 
 const TOKEN_KEY = 'soiree_token';
 const USER_KEY  = 'soiree_user';
@@ -54,10 +53,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within <AuthProvider>');
-  return ctx;
 };
