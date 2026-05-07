@@ -135,10 +135,10 @@ dist
 ### Node Patch ###
 # Serverless Webpack directories
 .webpack/
-
+EEE
 # Optional stylelint cache
 
 # SvelteKit build / generate output
-.svelte-kit
+.svelte-kitE
 
 # End of https://www.toptal.com/developers/gitignore/api/node

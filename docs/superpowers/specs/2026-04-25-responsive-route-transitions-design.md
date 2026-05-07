@@ -11,7 +11,7 @@ Add full multi-device responsiveness (phone, tablet, laptop, desktop) and animat
 
 **Library:** `framer-motion`
 
-**Behavior:** Right-to-left wipe. When navigating between routes, the outgoing page slides out to the left while the incoming page enters from the right simultaneously, producing a true wipe effect.
+**Behavior:** Right-to-left wipe. When navigating between routes, the outgoing page slides out to the left while the incoming page enters from the right simultaneously, producing a true wipe effect
 
 **Implementation:**
 - Install `framer-motion` as a production dependency.
