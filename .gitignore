@@ -142,3 +142,7 @@ EEE
 .svelte-kitE
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+.claude
+.superpowers
+.docs

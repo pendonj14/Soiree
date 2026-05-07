@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(bash \"C:/Users/Joseph/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/scripts/start-server.sh\" --project-dir \"c:/Users/Joseph/Documents/CODING PROJETS/SORIER\")",
-      "Bash(npm install *)"
-    ]
-  }
-}
