@@ -52,23 +52,23 @@ export const ReservationPage = () => {
 
   return (
     <PageTransition>
-      <div className="flex flex-col md:flex-row w-full gap-4 p-4 font-sans text-[#e8e6e3] min-h-screen pb-20 md:pb-4 md:h-screen">
+      <div className="flex min-h-screen w-full flex-col gap-4 p-3 font-sans text-[#e8e6e3] sm:p-4 md:h-screen md:flex-row">
 
         {/* Image & Title */}
-        <div className="group relative flex items-end overflow-hidden rounded-2xl border border-white/5 bg-[#111] shadow-lg h-[35vh] md:h-auto md:w-1/2">
+        <div className="group relative flex h-[42svh] min-h-[22rem] items-end overflow-hidden rounded-2xl border border-white/5 bg-[#111] shadow-lg md:h-auto md:min-h-0 md:w-1/2">
           <img
             src="https://framerusercontent.com/images/apLVZGAMneXESKaZkziIssg86a8.webp?scale-down-to=2048&width=2000&height=2400"
             alt="Wine glasses on a table"
             className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
-          <h1 className="relative z-10 p-8 sm:p-12 font-serif text-5xl sm:text-7xl leading-[1.1] tracking-widest text-[#e8e4dc]">
+          <h1 className="relative z-10 p-6 font-serif text-5xl leading-[1.1] tracking-widest text-[#e8e4dc] sm:p-12 sm:text-7xl">
             BOOK <br /> A TABLE
           </h1>
         </div>
 
         {/* Form */}
-        <div className="flex md:w-1/2 flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#0c0c0c] p-8 sm:p-12 shadow-lg">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#0c0c0c] p-6 shadow-lg sm:p-12 md:w-1/2">
 
           <div className="mb-4 flex items-center gap-4">
             <div className="h-px w-4 bg-[#d8d3c5]/30" />
@@ -96,7 +96,7 @@ export const ReservationPage = () => {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="grid w-full max-w-lg grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="grid w-full max-w-lg grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
 
               <div className="flex flex-col gap-2">
                 <label className="font-serif text-[10px] uppercase tracking-widest text-[#d8d3c5]">Date</label>
@@ -155,7 +155,7 @@ export const ReservationPage = () => {
               </div>
 
               {error && (
-                <div className="col-span-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">
+                <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400 sm:col-span-2">
                   {error}
                 </div>
               )}
@@ -163,7 +163,7 @@ export const ReservationPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="col-span-2 mt-2 rounded-lg border border-white/10 bg-[#151515] py-4 font-serif text-[10px] uppercase tracking-[0.2em] text-[#d8d3c5] transition-colors hover:bg-[#222] disabled:opacity-40"
+                className="mt-2 rounded-lg border border-white/10 bg-[#151515] py-4 font-serif text-[10px] uppercase tracking-[0.2em] text-[#d8d3c5] transition-colors hover:bg-[#222] disabled:opacity-40 sm:col-span-2"
               >
                 {loading ? 'Reserving...' : 'Confirm Reservation'}
               </button>
