@@ -6,13 +6,17 @@ const authHeaders = () => ({
 });
 
 const request = async (endpoint, options = {}) => {
+  const { headers: extraHeaders, ...rest } = options;
   const res = await fetch(`${API_URL}${endpoint}`, {
-    headers: authHeaders(),
-    ...options,
+    headers: { ...authHeaders(), ...(extraHeaders ?? {}) },
+    ...rest,
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
+  if (!res.ok) {
+    let message = 'Request failed';
+    try { ({ message } = await res.json()); } catch { /* non-JSON error body */ }
+    throw new Error(message);
+  }
+  return res.json();
 };
 
 export const adminService = {

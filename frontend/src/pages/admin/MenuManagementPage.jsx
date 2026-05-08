@@ -9,6 +9,7 @@ export function MenuManagementPage() {
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -24,21 +25,25 @@ export function MenuManagementPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     const fd = new FormData();
     fd.append('name', form.name);
     fd.append('description', form.description);
     fd.append('price', form.price);
     fd.append('category', form.category);
     if (form.image) fd.append('image', form.image);
-
-    if (editingId) {
-      const updated = await adminService.updateMenuItem(editingId, fd);
-      setItems((prev) => prev.map((i) => (i._id === editingId ? updated : i)));
-    } else {
-      const created = await adminService.createMenuItem(fd);
-      setItems((prev) => [...prev, created]);
+    try {
+      if (editingId) {
+        const updated = await adminService.updateMenuItem(editingId, fd);
+        setItems((prev) => prev.map((i) => (i._id === editingId ? updated : i)));
+      } else {
+        const created = await adminService.createMenuItem(fd);
+        setItems((prev) => [...prev, created]);
+      }
+      resetForm();
+    } catch (err) {
+      setError(err.message);
     }
-    resetForm();
   };
 
   const handleEdit = (item) => {
@@ -49,8 +54,13 @@ export function MenuManagementPage() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this menu item?')) return;
-    await adminService.deleteMenuItem(id);
-    setItems((prev) => prev.filter((i) => i._id !== id));
+    setError(null);
+    try {
+      await adminService.deleteMenuItem(id);
+      setItems((prev) => prev.filter((i) => i._id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   if (loading) return <div style={s.center}>Loading...</div>;
@@ -66,6 +76,12 @@ export function MenuManagementPage() {
           <button onClick={() => setShowForm(true)} style={s.addBtn}>+ Add Item</button>
         )}
       </div>
+
+      {error && (
+        <div style={{ padding: '8px 20px', background: '#2e1a1a', color: '#f44336', fontSize: 10 }}>
+          {error}
+        </div>
+      )}
 
       {showForm && (
         <form onSubmit={handleSubmit} style={s.form}>

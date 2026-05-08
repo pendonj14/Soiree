@@ -15,6 +15,7 @@ export function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [filter, setFilter] = useState('pending');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     adminService.getReservations()
@@ -23,19 +24,34 @@ export function ReservationsPage() {
   }, []);
 
   const handleStatus = useCallback(async (id, status) => {
-    await adminService.updateStatus(id, status);
-    setReservations((prev) => prev.map((r) => r._id === id ? { ...r, status } : r));
+    setError(null);
+    try {
+      await adminService.updateStatus(id, status);
+      setReservations((prev) => prev.map((r) => r._id === id ? { ...r, status } : r));
+    } catch (err) {
+      setError(err.message);
+    }
   }, []);
 
   const handleDelete = useCallback(async (id) => {
-    await adminService.deleteReservation(id);
-    setReservations((prev) => prev.filter((r) => r._id !== id));
+    setError(null);
+    try {
+      await adminService.deleteReservation(id);
+      setReservations((prev) => prev.filter((r) => r._id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
   }, []);
 
   const handleDeleteAllDone = useCallback(async () => {
     if (!window.confirm('Delete all completed reservations? This cannot be undone.')) return;
-    await adminService.deleteAllDone();
-    setReservations((prev) => prev.filter((r) => r.status !== 'done'));
+    setError(null);
+    try {
+      await adminService.deleteAllDone();
+      setReservations((prev) => prev.filter((r) => r.status !== 'done'));
+    } catch (err) {
+      setError(err.message);
+    }
   }, []);
 
   useSocket({
@@ -60,6 +76,12 @@ export function ReservationsPage() {
         <div style={s.title}>Reservations</div>
         <div style={s.subtitle}>Manage all guest reservations</div>
       </div>
+
+      {error && (
+        <div style={{ padding: '8px 20px', background: '#2e1a1a', color: '#f44336', fontSize: 10 }}>
+          {error}
+        </div>
+      )}
 
       <div style={s.filterRow}>
         {FILTERS.map((f) => (
@@ -117,20 +139,23 @@ export function ReservationsPage() {
   );
 }
 
-function RowActions({ status, onAccept, onReject, onDone, onDelete }) {
-  const Btn = ({ bg, color, onClick, children }) => (
+function RowBtn({ bg, color, onClick, children }) {
+  return (
     <button onClick={onClick} style={{ background: bg, color, fontSize: 9, padding: '3px 10px', borderRadius: 3, border: 'none', cursor: 'pointer', fontWeight: 600 }}>
       {children}
     </button>
   );
+}
+
+function RowActions({ status, onAccept, onReject, onDone, onDelete }) {
   if (status === 'pending') return (
     <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
-      <Btn bg="#1a2e1a" color="#4caf50" onClick={onAccept}>Accept</Btn>
-      <Btn bg="#2e1a1a" color="#f44336" onClick={onReject}>Reject</Btn>
+      <RowBtn bg="#1a2e1a" color="#4caf50" onClick={onAccept}>Accept</RowBtn>
+      <RowBtn bg="#2e1a1a" color="#f44336" onClick={onReject}>Reject</RowBtn>
     </div>
   );
-  if (status === 'accepted') return <Btn bg="#1a1a2e" color="#7986cb" onClick={onDone}>Mark Done</Btn>;
-  if (status === 'done')     return <Btn bg="#2e1a1a" color="#f44336" onClick={onDelete}>Delete</Btn>;
+  if (status === 'accepted') return <RowBtn bg="#1a1a2e" color="#7986cb" onClick={onDone}>Mark Done</RowBtn>;
+  if (status === 'done')     return <RowBtn bg="#2e1a1a" color="#f44336" onClick={onDelete}>Delete</RowBtn>;
   return <span style={{ color: '#333', fontSize: 10 }}>—</span>;
 }
 
