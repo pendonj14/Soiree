@@ -41,8 +41,10 @@ const updateReservationStatus = async (req, res, next) => {
     await reservation.save();
 
     const io = req.app.locals.io;
-    io.to('admins').emit('reservation:status_changed', { reservationId: id, status });
-    io.to(`user:${reservation.user}`).emit('reservation:status_changed', { reservationId: id, status });
+    if (io) {
+      io.to('admins').emit('reservation:status_changed', { reservationId: id, status });
+      io.to(`user:${reservation.user}`).emit('reservation:status_changed', { reservationId: id, status });
+    }
 
     res.status(200).json({ reservation });
   } catch (error) {
@@ -61,7 +63,8 @@ const deleteReservation = async (req, res, next) => {
       return res.status(400).json({ message: 'Only reservations with status "done" can be deleted' });
     }
     await reservation.deleteOne();
-    req.app.locals.io.to('admins').emit('reservation:deleted', { reservationId: id });
+    const io = req.app.locals.io;
+    if (io) io.to('admins').emit('reservation:deleted', { reservationId: id });
     res.status(200).json({ message: 'Reservation deleted' });
   } catch (error) {
     next(error);
@@ -71,7 +74,8 @@ const deleteReservation = async (req, res, next) => {
 const deleteAllDoneReservations = async (req, res, next) => {
   try {
     await Reservation.deleteMany({ status: 'done' });
-    req.app.locals.io.to('admins').emit('reservation:deleted_all_done');
+    const io = req.app.locals.io;
+    if (io) io.to('admins').emit('reservation:deleted_all_done');
     res.status(200).json({ message: 'All done reservations deleted' });
   } catch (error) {
     next(error);
