@@ -42,6 +42,11 @@ const createReservation = async (req, res, next) => {
 
         await reservation.populate("user", "firstName lastName email username");
 
+        const io = req.app.locals.io;
+        if (io) {
+            io.to('admins').emit('reservation:new', reservation);
+        }
+
         res.status(201).json({
             message: "Reservation created successfully",
             reservation,
