@@ -158,9 +158,69 @@ Route / (regular pages)
 
 ---
 
-## 5. Out of Scope
+## 5. Real-Time Events (Socket.IO)
+
+**Library:** Socket.IO — chosen over raw `ws` for built-in room support (needed for user-specific delivery) and automatic reconnection. No Redis needed at 5–10 concurrent users; in-memory is sufficient.
+
+**Install:**
+```bash
+npm install socket.io          # backend (root)
+npm install socket.io-client   # frontend
+```
+
+### Server setup (`backend/src/index.js`)
+Wrap the existing Express `app` with an `http.Server`, then attach Socket.IO to it. The existing `app.listen()` call is replaced with `httpServer.listen()`.
+
+```js
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
+const httpServer = createServer(app);
+const io = new io.Server(httpServer, {
+  cors: { origin: process.env.CLIENT_URL, methods: ['GET', 'POST'] }
+});
+```
+
+The `io` instance is stored in `app.locals.io` so controllers can emit without importing from a separate module.
+
+### Rooms
+
+| Room | Members | Purpose |
+|------|---------|---------|
+| `admins` | All connected admin sockets | Broadcast new reservations and status changes to all admins |
+| `user:<userId>` | The socket of that specific user | Deliver personal status-change events to the right user |
+
+On connect, the client sends a `join` event with its JWT. The server verifies the token, then joins the socket to `admins` (if admin) or `user:<id>` (if regular user). Unauthenticated connections are disconnected immediately.
+
+### Events
+
+| Event name | Direction | Payload | Trigger |
+|-----------|-----------|---------|---------|
+| `reservation:new` | server → `admins` room | full reservation object with user details | user creates a reservation |
+| `reservation:status_changed` | server → `admins` room + `user:<id>` room | `{ reservationId, status }` | admin updates status |
+| `reservation:deleted` | server → `admins` room | `{ reservationId }` | admin deletes a single reservation |
+| `reservation:deleted_all_done` | server → `admins` room | — | admin bulk-deletes all done reservations |
+
+### Emitting from controllers
+After each DB write in `admin.controllers.js` and `reservation.controllers.js`, emit the relevant event via `req.app.locals.io`.
+
+### Frontend (`frontend/src/hooks/useSocket.js`)
+New hook that:
+1. Creates a Socket.IO client connection on mount, sends `join` with the stored JWT
+2. Registers the 4 event listeners and dispatches updates into local React state
+3. Disconnects on unmount
+
+**`ReservationsPage.jsx`** uses `useSocket` to keep the reservation list in sync without polling. When `reservation:new` arrives, the new row is prepended to the pending list. When `reservation:status_changed` arrives, the matching row updates in place.
+
+**User-facing pages** (e.g. `ReservationPage.jsx`) use `useSocket` to listen for `reservation:status_changed` events scoped to their own user ID — they can show a toast or update reservation status in the UI without a page refresh.
+
+### Concurrent request handling
+Node.js handles 5–10 concurrent users natively via its non-blocking event loop. No thread pools or worker processes are needed. Socket.IO connections are kept alive via long-lived WebSocket upgrades; Express handles the REST API calls concurrently as usual.
+
+---
+
+## 6. Out of Scope
 
 - Admin cannot manage users (promote/demote roles)
 - No analytics or dashboard summary cards
-- No real-time updates (no websockets/polling)
 - No email notifications to guests on status change
