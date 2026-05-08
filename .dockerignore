@@ -1,0 +1,10 @@
+node_modules
+frontend/
+.env
+.git
+.gitignore
+*.log
+.claude
+.superpowers
+docs
+.github

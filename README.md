@@ -95,18 +95,33 @@ SOIRER/
 
 ## Getting Started
 
-### Prerequisites
+### Option 1 — Docker (recommended for teams)
 
-- Node.js >= 18
-- MongoDB Atlas account (or local MongoDB)
-- npm or yarn
+The fastest way to run the full stack on any machine. Requires only [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
-### Environment Variables
+#### MongoDB Atlas — one-time IP whitelist setup
+
+Instead of adding each teammate's IP manually, allow all IPs for development:
+
+1. Log in to [MongoDB Atlas](https://cloud.mongodb.com) → **Network Access** → **Add IP Address**
+2. Click **Allow Access from Anywhere** (`0.0.0.0/0`) → **Confirm**
+
+> Restrict this to specific IPs before going to production.
+
+#### Configure environment variables
+
+Copy both example files and fill in your credentials:
+
+```bash
+# From project root
+cp .env.example .env
+cp frontend/.env.example frontend/.env
+```
 
 **Backend** (`.env` at project root):
 ```env
 PORT=4000
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/soiree
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/soiree?retryWrites=true&w=majority
 CLIENT_URL=http://localhost:5173
 JWT_SECRET=your_super_secret_key_here
 JWT_EXPIRES_IN=7d
@@ -120,7 +135,54 @@ CLOUDINARY_API_SECRET=your_api_secret
 VITE_API_URL=http://localhost:4000/api
 ```
 
-### Install & Run
+> Never commit `.env` files — they are in `.gitignore`.
+
+#### Start
+
+```bash
+docker compose up
+```
+
+Both servers start with hot reload:
+- **Frontend** → http://localhost:5173
+- **Backend API** → http://localhost:4000/api
+
+#### Stop
+
+```bash
+docker compose down
+```
+
+#### Rebuild
+
+Run this after adding/removing npm packages or after pulling changes that modified `package.json` or the Dockerfiles:
+
+```bash
+docker compose down -v        # removes named volumes (node_modules inside containers)
+docker compose up --build     # rebuilds images and starts fresh
+```
+
+If you only changed a Dockerfile (not `package.json`), you can skip `-v`:
+
+```bash
+docker compose up --build
+```
+
+---
+
+### Option 2 — Manual setup
+
+#### Prerequisites
+
+- Node.js >= 18
+- MongoDB Atlas account (or local MongoDB)
+- npm
+
+#### Environment Variables
+
+Same `.env` contents as shown above under the Docker section.
+
+#### Install & Run
 
 **Backend**
 ```bash
