@@ -31,7 +31,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="absolute top-15 left-20 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/10 text-white shadow-xl">
+      <nav className="absolute top-8 left-8 md:top-15 md:left-20 z-20 flex items-center gap-2 md:gap-4 bg-black/70 backdrop-blur-md px-2 py-2 md:px-4 rounded-2xl border border-white/10 text-white shadow-xl max-w-[calc(100vw-4rem)] md:max-w-none flex-wrap sm:flex-nowrap">
 
         {/* Profile icon — always visible */}
           <div className="relative" ref={dropdownRef}>
@@ -82,29 +82,27 @@ export const Navbar = () => {
           </div>
 
         {/* Logo */}
-        <div className="flex items-center ">
-          <Link to="/" className="flex items-center">
-            <img src="/iconfinal.png" alt="Logo" className="h-8 w-auto" />
-            <span className="text-xl tracking-widest font-serif">SOIRÉE</span>
+        <div className="flex items-center shrink-0">
+          <Link to="/" className="flex items-center gap-1 sm:gap-2">
+            <img src="/iconfinal.png" alt="Logo" className="h-6 sm:h-8 w-auto hidden min-[400px]:block" />
+            <span className="text-sm min-[400px]:text-base sm:text-xl tracking-widest font-serif">SOIRÉE</span>
           </Link>
         </div>
 
         {/* Nav links */}
-        <div className="hidden md:flex gap-3 text-xs tracking-[0.15em] uppercase text-white/70">
+        <div className="hidden md:flex items-center gap-3 text-xs tracking-[0.15em] uppercase text-white/70">
           <Link to="/menu" className="hover:text-white transition-colors pl-2">Menu</Link>
-          <Link to="/about" className="hover:text-white transition-colors pr-1">About</Link>
+          <Link to="/about" className="hover:text-white transition-colors pr-1 whitespace-nowrap">Our Restaurant</Link>
         </div>
 
         {/* Right side */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center">
           <button
             onClick={handleBookTable}
-            className="text-xs border border-white/30 rounded-lg px-4 py-2 uppercase tracking-[0.15em] hover:bg-white hover:text-black transition-colors duration-300"
+            className="text-xs border border-white/30 rounded-lg px-4 py-2 uppercase tracking-[0.15em] hover:bg-white hover:text-black transition-colors duration-300 whitespace-nowrap"
           >
             Book a Table
           </button>
-
-          
         </div>
 
       </nav>
