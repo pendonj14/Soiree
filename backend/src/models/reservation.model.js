@@ -31,7 +31,12 @@ const reservationSchema = new Schema(
         orderedItem:{
             type: String,
             default: "",
-        }
+        },
+        status: {
+            type: String,
+            enum: ['pending', 'accepted', 'rejected', 'done'],
+            default: 'pending',
+        },
     },
     {
         timestamps: true
