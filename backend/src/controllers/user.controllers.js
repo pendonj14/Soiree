@@ -33,6 +33,7 @@ const registerUser = async (req, res, next) => {
                 lastName: user.lastName,
                 username: user.username,
                 email: user.email,
+                role: user.role,
             },
         });
 
@@ -60,7 +61,7 @@ const loginUser = async (req, res, next) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { id: user._id, email: user.email, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
@@ -74,6 +75,7 @@ const loginUser = async (req, res, next) => {
                 lastName: user.lastName,
                 username: user.username,
                 email: user.email,
+                role: user.role,
             },
         });
 
