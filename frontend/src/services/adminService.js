@@ -45,9 +45,12 @@ export const adminService = {
       headers: { Authorization: `Bearer ${localStorage.getItem('soiree_token')}` },
       body: formData,
     }).then(async (r) => {
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.message || 'Create failed');
-      return data;
+      if (!r.ok) {
+        let message = 'Create failed';
+        try { ({ message } = await r.json()); } catch { /* non-JSON error body */ }
+        throw new Error(message);
+      }
+      return r.json();
     }),
 
   updateMenuItem: (id, formData) =>
@@ -56,9 +59,12 @@ export const adminService = {
       headers: { Authorization: `Bearer ${localStorage.getItem('soiree_token')}` },
       body: formData,
     }).then(async (r) => {
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.message || 'Update failed');
-      return data;
+      if (!r.ok) {
+        let message = 'Update failed';
+        try { ({ message } = await r.json()); } catch { /* non-JSON error body */ }
+        throw new Error(message);
+      }
+      return r.json();
     }),
 
   deleteMenuItem: (id) =>
