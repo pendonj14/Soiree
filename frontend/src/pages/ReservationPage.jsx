@@ -68,38 +68,38 @@ export const ReservationPage = () => {
         </div>
 
         {/* Form */}
-        <div className="flex md:w-1/2 flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#0c0c0c] p-8 sm:p-12 shadow-lg">
+        <div className="flex w-full md:w-1/2 flex-col items-center justify-center rounded-3xl border border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md p-10 sm:p-16 lg:p-20 shadow-2xl relative overflow-hidden">
 
-          <div className="mb-4 flex items-center gap-4">
-            <div className="h-px w-4 bg-[#d8d3c5]/30" />
-            <h2 className="font-serif text-2xl tracking-[0.2em] text-[#d8d3c5]">RESERVATION</h2>
-            <div className="h-px w-4 bg-[#d8d3c5]/30" />
+          <div className="mb-6 flex items-center gap-6">
+            <div className="h-[1px] w-8 bg-[#d8d3c5]/30" />
+            <h2 className="font-serif text-3xl tracking-[0.25em] text-[#d8d3c5]">RESERVATION</h2>
+            <div className="h-[1px] w-8 bg-[#d8d3c5]/30" />
           </div>
-          <p className="mb-8 sm:mb-12 max-w-md text-center text-sm leading-relaxed text-gray-400">
+          <p className="mb-10 sm:mb-14 max-w-md text-center text-base leading-relaxed text-gray-400">
             Secure your spot at Soirée, where exceptional dining and a remarkable experience await.
           </p>
 
           {success ? (
-            <div className="flex flex-col items-center gap-6 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10">
-                <span className="text-xl text-green-400">✓</span>
+            <div className="flex flex-col items-center gap-8 text-center animate-in fade-in zoom-in-95 duration-500">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+                <span className="text-3xl text-green-400">✓</span>
               </div>
               <div>
-                <p className="font-serif text-lg tracking-widest text-[#d8d3c5]">RESERVATION CONFIRMED</p>
-                <p className="mt-2 text-xs text-white/40">We look forward to welcoming you.</p>
+                <p className="font-serif text-2xl tracking-[0.2em] text-[#d8d3c5]">RESERVATION CONFIRMED</p>
+                <p className="mt-4 text-base text-white/50">We look forward to welcoming you.</p>
               </div>
               <button
                 onClick={() => setSuccess(false)}
-                className="mt-2 rounded-lg border border-white/10 px-8 py-3 text-[10px] uppercase tracking-[0.2em] text-[#d8d3c5] transition-colors hover:bg-white/5"
+                className="mt-6 rounded-xl border border-[#d8d3c5]/30 px-10 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#d8d3c5] transition-all hover:bg-[#d8d3c5] hover:text-[#0a0a0a]"
               >
                 Make Another Reservation
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="grid w-full max-w-lg grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="grid w-full max-w-xl grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 animate-in fade-in duration-500">
 
               <div className="flex flex-col gap-2">
-                <label className="font-serif text-[10px] uppercase tracking-widest text-[#d8d3c5]">Date</label>
+                <label className="font-serif text-xs uppercase tracking-widest text-[#d8d3c5]/80">Date</label>
                 <input
                   type="date"
                   name="reservationDate"
@@ -107,41 +107,41 @@ export const ReservationPage = () => {
                   onChange={handleChange}
                   required
                   min={new Date().toISOString().split('T')[0]}
-                  className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 transition-colors focus:border-white/30 focus:outline-none scheme-dark"
+                  className="rounded-xl border border-white/10 bg-[#111] px-4 py-3 text-base text-[#d8d3c5] transition-all focus:border-[#d8d3c5]/50 focus:bg-[#1a1a1a] focus:shadow-[0_0_15px_rgba(212,204,182,0.1)] focus:outline-none scheme-dark custom-scrollbar"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-serif text-[10px] uppercase tracking-widest text-[#d8d3c5]">Time</label>
+                <label className="font-serif text-xs uppercase tracking-widest text-[#d8d3c5]/80">Time</label>
                 <input
                   type="time"
                   name="reservationTime"
                   value={form.reservationTime}
                   onChange={handleChange}
                   required
-                  className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 transition-colors focus:border-white/30 focus:outline-none scheme-dark"
+                  className="rounded-xl border border-white/10 bg-[#111] px-4 py-3 text-base text-[#d8d3c5] transition-all focus:border-[#d8d3c5]/50 focus:bg-[#1a1a1a] focus:shadow-[0_0_15px_rgba(212,204,182,0.1)] focus:outline-none scheme-dark custom-scrollbar"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-serif text-[10px] uppercase tracking-widest text-[#d8d3c5]">Guests</label>
+                <label className="font-serif text-xs uppercase tracking-widest text-[#d8d3c5]/80">Guests</label>
                 <select
                   name="numberOfGuests"
                   value={form.numberOfGuests}
                   onChange={handleChange}
-                  className="appearance-none rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 transition-colors focus:border-white/30 focus:outline-none"
+                  className="appearance-none rounded-xl border border-white/10 bg-[#111] px-4 py-3 text-base text-[#d8d3c5] transition-all focus:border-[#d8d3c5]/50 focus:bg-[#1a1a1a] focus:shadow-[0_0_15px_rgba(212,204,182,0.1)] focus:outline-none custom-scrollbar cursor-pointer"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                    <option key={n} value={n}>
+                    <option key={n} value={n} className="bg-[#111] text-[#d8d3c5]">
                       {n} {n === 1 ? 'Guest' : 'Guests'}
                     </option>
                   ))}
-                  <option value="9">9+ Guests</option>
+                  <option value="9" className="bg-[#111] text-[#d8d3c5]">9+ Guests</option>
                 </select>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-serif text-[10px] uppercase tracking-widest text-[#d8d3c5]">
+                <label className="font-serif text-xs uppercase tracking-widest text-[#d8d3c5]/80">
                   Special Requests
                 </label>
                 <input
@@ -150,12 +150,12 @@ export const ReservationPage = () => {
                   value={form.orderedItem}
                   onChange={handleChange}
                   placeholder="Allergies, occasions..."
-                  className="rounded-lg border border-white/10 bg-[#0a0a0a] p-3 text-sm text-gray-300 placeholder-gray-600 transition-colors focus:border-white/30 focus:outline-none"
+                  className="rounded-xl border border-white/10 bg-[#111] px-4 py-3 text-base text-[#d8d3c5] placeholder-gray-600 transition-all focus:border-[#d8d3c5]/50 focus:bg-[#1a1a1a] focus:shadow-[0_0_15px_rgba(212,204,182,0.1)] focus:outline-none"
                 />
               </div>
 
               {error && (
-                <div className="col-span-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">
+                <div className="col-span-1 sm:col-span-2 rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm font-semibold tracking-wide text-red-400">
                   {error}
                 </div>
               )}
@@ -163,7 +163,7 @@ export const ReservationPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="col-span-2 mt-2 rounded-lg border border-white/10 bg-[#151515] py-4 font-serif text-[10px] uppercase tracking-[0.2em] text-[#d8d3c5] transition-colors hover:bg-[#222] disabled:opacity-40"
+                className="col-span-1 sm:col-span-2 mt-2 rounded-xl border border-[#d8d3c5]/20 bg-[#151515] py-3.5 font-serif text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#d8d3c5] transition-all hover:bg-[#d8d3c5] hover:text-[#0a0a0a] hover:shadow-[0_0_20px_rgba(212,204,182,0.2)] disabled:opacity-40 disabled:hover:bg-[#151515] disabled:hover:text-[#d8d3c5]"
               >
                 {loading ? 'Reserving...' : 'Confirm Reservation'}
               </button>
