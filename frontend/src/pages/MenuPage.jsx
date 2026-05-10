@@ -40,7 +40,7 @@ export const MenuPage = () => {
           {/* Menu Content */}
           <div
             ref={scrollContainerRef}
-            className="md:w-1/2 lg:w-auto lg:col-span-2 lg:row-span-4 rounded-3xl border border-white/10 bg-transparent flex flex-col items-center py-10 px-4 sm:px-8 overflow-y-auto"
+            className="md:w-1/2 lg:w-auto lg:col-span-2 lg:row-span-4 rounded-3xl border border-white/10 bg-transparent flex flex-col items-center py-10 px-4 sm:px-8 overflow-y-auto custom-scrollbar"
           >
 
             {/* Category Buttons */}
