@@ -1,15 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { adminService } from '../../services/adminService';
 import { useSocket } from '../../hooks/useSocket';
-
-const FILTERS = ['pending', 'accepted', 'rejected', 'done', 'all'];
-
-const BADGE = {
-  pending:  { bg: '#2a2000', color: '#f0a500', label: 'PENDING' },
-  accepted: { bg: '#1a2e1a', color: '#4caf50', label: 'ACCEPTED' },
-  rejected: { bg: '#2e1a1a', color: '#f44336', label: 'REJECTED' },
-  done:     { bg: '#1a1a2e', color: '#7986cb', label: 'DONE' },
-};
+import { ReservationFilters } from '../../components/admin/Reservations/ReservationFilters';
+import { ReservationTableRow } from '../../components/admin/Reservations/ReservationTableRow';
 
 export function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
@@ -68,108 +61,95 @@ export function ReservationsPage() {
     ? reservations
     : reservations.filter((r) => r.status === filter);
 
-  if (loading) return <div style={s.center}>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full w-full bg-[#0a0a0a]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-2 border-[#d4ccb6] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[#888] tracking-widest text-sm uppercase">Loading Reservations</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={s.page}>
-      <div style={s.header}>
-        <div style={s.title}>Reservations</div>
-        <div style={s.subtitle}>Manage all guest reservations</div>
+    <div className="flex flex-col h-full bg-[#0a0a0a] text-[#d4ccb6] overflow-hidden">
+      {/* Header section */}
+      <div className="flex flex-col px-8 py-8 border-b border-[#1e1e1e] bg-[#0a0a0a] shrink-0 relative overflow-hidden">
+        {/* Subtle decorative accent */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4ccb6] opacity-[0.02] rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+        
+        <h1 className="text-3xl md:text-4xl font-light tracking-wide text-[#d4ccb6] mb-2 font-serif">
+          Reservations
+        </h1>
+        <p className="text-[#888] text-sm tracking-wide">
+          Manage all guest reservations and tables
+        </p>
       </div>
 
       {error && (
-        <div style={{ padding: '8px 20px', background: '#2e1a1a', color: '#f44336', fontSize: 10 }}>
-          {error}
+        <div className="px-8 py-4 bg-[#2e1a1a] text-[#f44336] text-sm font-medium border-b border-[#f44336]/20 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {error}
+          </div>
+          <button onClick={() => setError(null)} className="opacity-70 hover:opacity-100 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
       )}
 
-      <div style={s.filterRow}>
-        {FILTERS.map((f) => (
-          <button key={f} onClick={() => setFilter(f)}
-            style={{ ...s.pill, ...(filter === f ? s.pillActive : {}) }}>
-            {f.charAt(0).toUpperCase() + f.slice(1)}
-          </button>
-        ))}
-        {filter === 'done' && (
-          <button onClick={handleDeleteAllDone} style={s.deleteAllBtn}>Delete All</button>
-        )}
-      </div>
+      <ReservationFilters 
+        filter={filter} 
+        setFilter={setFilter} 
+        onDeleteAllDone={handleDeleteAllDone} 
+      />
 
-      <div style={{ overflowY: 'auto', flex: 1 }}>
-        <table style={s.table}>
-          <thead>
-            <tr>
-              {['GUEST', 'DATE', 'TIME', 'GUESTS', 'STATUS', 'ACTIONS'].map((h) => (
-                <th key={h} style={s.th}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {visible.length === 0 ? (
-              <tr><td colSpan={6} style={{ ...s.td, textAlign: 'center', color: '#444', padding: 32 }}>No reservations</td></tr>
-            ) : visible.map((r) => {
-              const badge = BADGE[r.status];
-              return (
-                <tr key={r._id}>
-                  <td style={s.td}>{r.guestName}</td>
-                  <td style={{ ...s.td, color: '#888' }}>{new Date(r.reservationDate).toLocaleDateString()}</td>
-                  <td style={{ ...s.td, color: '#888' }}>{r.reservationTime}</td>
-                  <td style={{ ...s.td, color: '#888' }}>{r.numberOfGuests}</td>
-                  <td style={s.td}>
-                    <span style={{ background: badge.bg, color: badge.color, fontSize: 9, padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>
-                      {badge.label}
-                    </span>
-                  </td>
-                  <td style={{ ...s.td, textAlign: 'right' }}>
-                    <RowActions
-                      status={r.status}
-                      onAccept={() => handleStatus(r._id, 'accepted')}
-                      onReject={() => handleStatus(r._id, 'rejected')}
-                      onDone={() => handleStatus(r._id, 'done')}
-                      onDelete={() => handleDelete(r._id)}
-                    />
-                  </td>
+      {/* Main content table area */}
+      <div className="flex-1 overflow-auto p-6 md:p-8">
+        <div className="bg-[#0f0f0f] border border-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                <tr className="bg-[#141414] border-b border-[#1e1e1e]">
+                  {['GUEST', 'DATE', 'TIME', 'GUESTS', 'STATUS', 'ACTIONS'].map((h, i) => (
+                    <th 
+                      key={h} 
+                      className={`px-6 py-5 text-xs font-semibold text-[#888] tracking-widest uppercase ${i === 5 ? 'text-right' : ''}`}
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y divide-[#1e1e1e]/50">
+                {visible.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-24 text-center">
+                      <div className="flex flex-col items-center justify-center text-[#444]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <p className="text-lg font-light tracking-wide text-[#888]">No reservations found</p>
+                        <p className="text-sm mt-1">There are no {filter !== 'all' ? filter : ''} reservations at the moment.</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  visible.map((r) => (
+                    <ReservationTableRow 
+                      key={r._id} 
+                      reservation={r}
+                      onAccept={(id) => handleStatus(id, 'accepted')}
+                      onReject={(id) => handleStatus(id, 'rejected')}
+                      onDone={(id) => handleStatus(id, 'done')}
+                      onDelete={(id) => handleDelete(id)}
+                    />
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-function RowBtn({ bg, color, onClick, children }) {
-  return (
-    <button onClick={onClick} style={{ background: bg, color, fontSize: 9, padding: '3px 10px', borderRadius: 3, border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-      {children}
-    </button>
-  );
-}
-
-function RowActions({ status, onAccept, onReject, onDone, onDelete }) {
-  if (status === 'pending') return (
-    <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
-      <RowBtn bg="#1a2e1a" color="#4caf50" onClick={onAccept}>Accept</RowBtn>
-      <RowBtn bg="#2e1a1a" color="#f44336" onClick={onReject}>Reject</RowBtn>
-    </div>
-  );
-  if (status === 'accepted') return <RowBtn bg="#1a1a2e" color="#7986cb" onClick={onDone}>Mark Done</RowBtn>;
-  if (status === 'done')     return <RowBtn bg="#2e1a1a" color="#f44336" onClick={onDelete}>Delete</RowBtn>;
-  return <span style={{ color: '#333', fontSize: 10 }}>—</span>;
-}
-
-const s = {
-  page:       { display: 'flex', flexDirection: 'column', height: '100%' },
-  header:     { padding: '16px 20px 12px', borderBottom: '1px solid #1e1e1e' },
-  title:      { color: '#d4ccb6', fontSize: 13, fontWeight: 600, letterSpacing: 0.5 },
-  subtitle:   { color: '#555', fontSize: 10, marginTop: 2 },
-  filterRow:  { padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #1a1a1a', flexWrap: 'wrap' },
-  pill:       { background: '#1e1e1e', color: '#666', fontSize: 9, padding: '3px 10px', borderRadius: 20, border: 'none', cursor: 'pointer' },
-  pillActive: { background: '#d4ccb6', color: '#0a0a0a', fontWeight: 600 },
-  deleteAllBtn: { marginLeft: 'auto', background: '#2e1a1a', color: '#f44336', fontSize: 9, padding: '3px 12px', borderRadius: 4, border: '1px solid #f4433622', cursor: 'pointer', fontWeight: 600 },
-  table:      { width: '100%', borderCollapse: 'collapse', fontSize: 10 },
-  th:         { textAlign: 'left', padding: '8px 20px', color: '#555', fontWeight: 500, letterSpacing: 0.5, fontSize: 9, borderBottom: '1px solid #1e1e1e' },
-  td:         { padding: '10px 20px', color: '#d4ccb6', borderBottom: '1px solid #141414' },
-  center:     { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#555' },
-};
