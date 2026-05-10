@@ -28,7 +28,7 @@ export const MenuPage = () => {
           <div className="md:w-1/2 lg:w-auto lg:col-span-2 lg:row-span-4 relative rounded-3xl overflow-hidden h-[40vh] md:h-auto">
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: "url('/menuside.png')" }}
+              style={{ backgroundImage: "url('/menuside.avif')" }}
             >
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20"></div>
             </div>

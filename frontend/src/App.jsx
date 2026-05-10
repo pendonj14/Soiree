@@ -26,7 +26,7 @@ function UserApp() {
   }, [user, navigate]);
 
   return (
-    <div className="relative min-h-screen bg-[url('/marble.jpg')] bg-cover bg-center bg-fixed">
+    <div className="relative min-h-screen bg-[url('/marble.avif')] bg-cover bg-center bg-fixed">
       <div className="absolute inset-0 bg-black/70" />
       <div className="relative z-10 min-h-screen overflow-x-hidden">
         <Navbar />

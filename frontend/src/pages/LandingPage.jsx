@@ -14,7 +14,7 @@ export const LandingPage = () => {
             {/* Background video */}
             <video
               className="absolute inset-0 w-full h-full object-cover"
-              src="/menu.mp4"
+              src="/menu.webm"
               autoPlay
               loop
               muted

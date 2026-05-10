@@ -84,7 +84,7 @@ export const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center shrink-0">
           <Link to="/" className="flex items-center gap-1 sm:gap-2">
-            <img src="/iconfinal.png" alt="Logo" className="h-7 sm:h-8 w-auto hidden min-[400px]:block" />
+            <img src="/iconfinal.svg" alt="Logo" className="h-7 sm:h-8 w-auto hidden min-[400px]:block" />
             <span className="text-sm min-[400px]:text-base sm:text-xl tracking-widest font-serif pr-2 md:pr-0">SOIRÉE</span>
           </Link>
         </div>
