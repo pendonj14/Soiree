@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { reservationService } from '../services/reservationService'
@@ -19,11 +19,9 @@ export const ReservationPage = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  // Belt-and-suspenders guard — modal handles the primary flow
-  if (!isAuthenticated) {
-    navigate('/')
-    return null
-  }
+  useEffect(() => {
+    if (!isAuthenticated) navigate('/')
+  }, [isAuthenticated, navigate])
 
   const handleChange = (e) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))

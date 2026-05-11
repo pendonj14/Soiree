@@ -23,9 +23,12 @@ export const authService = {
       body: JSON.stringify({ firstName, lastName, username, email, password }),
     }),
 
-  logout: (email) =>
+  logout: (token) =>
     request('/users/logout', {
       method: 'POST',
-      body: JSON.stringify({ email }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     }),
 };

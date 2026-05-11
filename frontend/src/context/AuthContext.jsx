@@ -30,14 +30,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(async () => {
-    if (user?.email) {
-      await authService.logout(user.email).catch(() => {});
+    if (token) {
+      await authService.logout(token).catch(() => {});
     }
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setToken(null);
     setUser(null);
-  }, [user]);
+  }, [token]);
 
   return (
     <AuthContext.Provider
