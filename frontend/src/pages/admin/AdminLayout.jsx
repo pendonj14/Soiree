@@ -60,7 +60,7 @@ export function AdminLayout() {
 
         {/* Logo/Brand */}
         <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-[#0a0a0a] shadow-[0_0_15px_rgba(212,204,182,0.05)] hover:bg-[#1a1a1a] transition-colors cursor-pointer overflow-hidden border border-[#1e1e1e]" title="Upload Logo">
-          <img src="/icon.png" alt="Brand Logo" className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+          <img src="/icon.svg" alt="Brand Logo" className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
         </div>
 
         {/* Navigation Links */}

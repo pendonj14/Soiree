@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { toast } from 'sonner';
 
 export const AuthModal = ({ onClose, redirectTo }) => {
   const [tab, setTab] = useState('login');
@@ -30,8 +31,10 @@ export const AuthModal = ({ onClose, redirectTo }) => {
       await login(form.email, form.password);
       onClose();
       if (redirectTo) navigate(redirectTo);
+      toast.success("Logged in successfully");
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -42,11 +45,12 @@ export const AuthModal = ({ onClose, redirectTo }) => {
     setLoading(true);
     try {
       await register(form.firstName, form.lastName, form.username, form.email, form.password);
-      setSuccessMsg('Account created — please sign in.');
+      toast.success("Account created — please sign in.");
       setForm({ firstName: '', lastName: '', username: '', email: form.email, password: '' });
       setTab('login');
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -94,11 +98,10 @@ export const AuthModal = ({ onClose, redirectTo }) => {
             <button
               key={key}
               onClick={() => switchTab(key)}
-              className={`flex-1 pb-3 text-[10px] uppercase tracking-widest transition-colors ${
-                tab === key
-                  ? 'border-b border-white text-white'
-                  : 'text-white/40 hover:text-white/70'
-              }`}
+              className={`flex-1 pb-3 text-[10px] uppercase tracking-widest transition-colors ${tab === key
+                ? 'border-b border-white text-white'
+                : 'text-white/40 hover:text-white/70'
+                }`}
             >
               {label}
             </button>
@@ -199,8 +202,8 @@ export const AuthModal = ({ onClose, redirectTo }) => {
             {loading
               ? 'Please wait...'
               : tab === 'login'
-              ? 'Sign In'
-              : 'Create Account'}
+                ? 'Sign In'
+                : 'Create Account'}
           </button>
         </form>
       </div>

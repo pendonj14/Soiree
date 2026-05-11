@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { AuthModal } from './AuthModal';
+import { toast } from 'sonner';
 
 export const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -63,7 +64,7 @@ export const Navbar = () => {
                     <p className="mt-0.5 truncate text-sm text-[#d8d3c5]">{user?.username}</p>
                   </div>
                   <button
-                    onClick={() => { setShowDropdown(false); logout(); }}
+                    onClick={() => { setShowDropdown(false); logout(); toast.success("Logged out successfully"); }}
                     className="flex w-full items-center gap-2 px-4 py-2.5 text-xs uppercase tracking-widest text-white/50 hover:bg-white/5 hover:text-white transition-colors"
                   >
                     Sign Out

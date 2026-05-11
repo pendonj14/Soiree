@@ -13,6 +13,8 @@ import { Navbar } from './components/NavBar';
 import { BottomNav } from './components/BottomNav';
 import { AboutPage } from './pages/AboutPage';
 import { ReservationPage } from './pages/ReservationPage';
+import { Toaster } from "@/components/ui/sonner"
+
 
 function UserApp() {
   const { user } = useAuth();
@@ -64,6 +66,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <AppRoutes />
+        <Toaster />
       </AuthProvider>
     </BrowserRouter>
   );
