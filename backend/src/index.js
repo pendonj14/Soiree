@@ -3,12 +3,14 @@ import { createServer } from "http";
 import connectDB from "./config/database.js";
 import app from "./app.js";
 import { initSocket } from "./socket/index.js";
+import { connectRedis } from "./config/redis.js";
 
 dotenv.config({ path: "./.env" });
 
 const startServer = async () => {
     try {
         await connectDB();
+        await connectRedis();
 
         const httpServer = createServer(app);
         const io = initSocket(httpServer, process.env.CLIENT_URL);
