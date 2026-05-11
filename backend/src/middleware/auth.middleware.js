@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
+import { redisClient } from "../config/redis.js";
 
-const protect = (req, res, next) => {
-    // Token is sent as: "Bearer <token>"
+const protect = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,8 +12,18 @@ const protect = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // attach user info to the request
-        next();             // allow the request to continue
+
+        try {
+            const isBlocked = await redisClient.get(`blocklist:${token}`);
+            if (isBlocked) {
+                return res.status(401).json({ message: "Token is invalid or expired" });
+            }
+        } catch (cacheErr) {
+            console.warn("Redis blocklist check failed:", cacheErr.message);
+        }
+
+        req.user = decoded;
+        next();
     } catch (error) {
         return res.status(401).json({ message: "Token is invalid or expired" });
     }

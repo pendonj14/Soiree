@@ -1,5 +1,9 @@
 import { Reservation } from "../models/reservation.model.js";
 import { User } from "../models/user.model.js";
+import { redisClient } from "../config/redis.js";
+
+const USER_CACHE_KEY = (id) => `user:${id}`;
+const USER_CACHE_TTL = 300; // 5 minutes
 
 const createReservation = async (req, res, next) => {
     try {
@@ -23,10 +27,25 @@ const createReservation = async (req, res, next) => {
             return res.status(400).json({ message: "Reservation date cannot be in the past" });
         }
 
-        // Fetch user to auto-populate guest name
-        const user = await User.findById(req.user.id).select("firstName lastName");
+        // Fetch user to auto-populate guest name — cache to avoid DB hit on every reservation
+        let user;
+        try {
+            const cachedUser = await redisClient.get(USER_CACHE_KEY(req.user.id));
+            if (cachedUser) user = JSON.parse(cachedUser);
+        } catch (cacheErr) {
+            console.warn("Redis read failed, falling back to DB:", cacheErr.message);
+        }
+
         if (!user) {
-            return res.status(404).json({ message: "User account not found" });
+            user = await User.findById(req.user.id).select("firstName lastName");
+            if (!user) {
+                return res.status(404).json({ message: "User account not found" });
+            }
+            try {
+                await redisClient.set(USER_CACHE_KEY(req.user.id), JSON.stringify(user), { EX: USER_CACHE_TTL });
+            } catch (cacheErr) {
+                console.warn("Redis write failed:", cacheErr.message);
+            }
         }
 
         const guestName = `${user.firstName} ${user.lastName}`;

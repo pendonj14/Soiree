@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { redisClient } from "../config/redis.js";
 
 const registerUser = async (req, res, next) => {
     try {
@@ -86,15 +87,27 @@ const loginUser = async (req, res, next) => {
 
 const logoutUser = async (req, res, next) => {
     try {
-        const { email } = req.body;
-
-        if (!email) {
-            return res.status(400).json({ message: "Email is required" });
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(400).json({ message: "No token provided" });
         }
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        const token = authHeader.split(" ")[1];
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch {
+            return res.status(401).json({ message: "Token is invalid or expired" });
+        }
+
+        const ttl = decoded.exp - Math.floor(Date.now() / 1000);
+        if (ttl > 0) {
+            try {
+                await redisClient.set(`blocklist:${token}`, "1", { EX: ttl });
+            } catch (cacheErr) {
+                console.warn("Redis blocklist write failed:", cacheErr.message);
+            }
         }
 
         res.status(200).json({ message: "Logout successful" });
