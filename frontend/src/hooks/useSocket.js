@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
 // Strip /api suffix to get the bare server origin
-const SOCKET_URL = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+const SOCKET_URL = (import.meta.env.VITE_API_URL || '').replace(/\/api$/, '');
 
 export function useSocket(handlers) {
   // Keep a stable ref to handlers so the effect doesn't re-run on every render
