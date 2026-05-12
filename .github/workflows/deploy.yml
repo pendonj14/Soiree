@@ -72,9 +72,8 @@ jobs:
       - name: Build for Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          echo "VITE_API_URL=https://sorier-backend.onrender.com/api" >> frontend/.env.production
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          VITE_API_URL: https://sorier-backend.onrender.com/api
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
         env:
