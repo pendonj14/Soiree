@@ -15,17 +15,36 @@ const limiter = rateLimit({
 });
 
 const app = express();
-    app.use(helmet());
-    app.use(cors({
-        origin: (_origin, callback) => callback(null, process.env.CLIENT_URL),
-        methods: ["GET", "POST", "PATCH", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    }));
-    app.use(limiter);
-    app.use(express.json());
-    app.use("/api/users", userRouter);
-    app.use("/api/reservations", reservationRouter);
-    app.use("/api/menu", menuRouter);
-    app.use("/api/admin", adminRouter);
-    app.use(errorHandler);
+app.use(helmet());
+app.use(cors({
+    origin: function (origin, callback) {
+        const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+        // Remove trailing slash for exact matching
+        const normalizedClientUrl = clientUrl.replace(/\/$/, "");
+        
+        const allowedOrigins = [
+            normalizedClientUrl,
+            "http://localhost:5173",
+            "http://localhost:4173"
+        ];
+
+        // Allow if no origin (e.g. Postman), matches allowed origins, or is a Vercel preview/deployment
+        if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+            callback(null, true);
+        } else {
+            console.log("CORS blocked origin:", origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+}));
+app.use(limiter);
+app.use(express.json());
+app.use("/api/users", userRouter);
+app.use("/api/reservations", reservationRouter);
+app.use("/api/menu", menuRouter);
+app.use("/api/admin", adminRouter);
+app.use(errorHandler);
 export default app;
