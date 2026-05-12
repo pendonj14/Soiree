@@ -33,7 +33,7 @@ jobs:
         working-directory: frontend
         run: npm run build
         env:
-          VITE_API_URL: https://placeholder.example.com/api
+          VITE_API_URL: https://sorier-backend.onrender.com/api
 
   check-backend:
     name: Check Backend

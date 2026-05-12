@@ -21,7 +21,7 @@ app.use(cors({
         const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
         // Remove trailing slash for exact matching
         const normalizedClientUrl = clientUrl.replace(/\/$/, "");
-        
+
         const allowedOrigins = [
             normalizedClientUrl,
             "http://localhost:5173",
@@ -46,5 +46,8 @@ app.use("/api/users", userRouter);
 app.use("/api/reservations", reservationRouter);
 app.use("/api/menu", menuRouter);
 app.use("/api/admin", adminRouter);
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+});
 app.use(errorHandler);
 export default app;
