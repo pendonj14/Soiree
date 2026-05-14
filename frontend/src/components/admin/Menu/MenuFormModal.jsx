@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export function MenuFormModal({ isOpen, onClose, onSubmit, form, setForm, isEditing }) {
+export function MenuFormModal({ isOpen, onClose, onSubmit, form, setForm, isEditing, isSubmitting }) {
   const fileRef = useRef(null);
   if (!isOpen) return null;
 
@@ -95,9 +95,14 @@ export function MenuFormModal({ isOpen, onClose, onSubmit, form, setForm, isEdit
             </button>
             <button 
               type="submit" 
-              className="px-6 py-2.5 rounded-lg text-sm font-bold tracking-wider bg-[#d4ccb6] text-[#0a0a0a] hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,204,182,0.15)]"
+              disabled={isSubmitting}
+              className={`px-6 py-2.5 rounded-lg text-sm font-bold tracking-wider transition-colors shadow-[0_0_15px_rgba(212,204,182,0.15)] ${
+                isSubmitting 
+                  ? 'bg-[#d4ccb6]/50 text-[#0a0a0a]/50 cursor-not-allowed' 
+                  : 'bg-[#d4ccb6] text-[#0a0a0a] hover:bg-white'
+              }`}
             >
-              {isEditing ? 'Save Changes' : 'Create Item'}
+              {isSubmitting ? 'Saving...' : (isEditing ? 'Save Changes' : 'Create Item')}
             </button>
           </div>
         </form>

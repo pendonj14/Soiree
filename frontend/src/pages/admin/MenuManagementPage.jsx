@@ -17,6 +17,7 @@ export function MenuManagementPage() {
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     adminService.getMenuItems().then(setItems).finally(() => setLoading(false));
@@ -34,6 +35,7 @@ export function MenuManagementPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsSubmitting(true);
     const fd = new FormData();
     fd.append('name', form.name);
     fd.append('description', form.description);
@@ -52,6 +54,8 @@ export function MenuManagementPage() {
       closeFormModal();
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -168,6 +172,7 @@ export function MenuManagementPage() {
         form={form}
         setForm={setForm}
         isEditing={!!editingId}
+        isSubmitting={isSubmitting}
       />
 
       <DeleteConfirmModal 
