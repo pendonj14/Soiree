@@ -4,6 +4,41 @@ A full-stack restaurant reservation web app with a React frontend and a Node.js/
 
 ---
 
+## Project Showcase
+
+# Dashboard
+
+<div align="center">
+  <img src="frontend/public/showcase-dashboard.png" alt="SOIRÉE Landing Page" width="100%" />
+</div>
+
+<br />
+
+# Menu & About
+
+<div align="center">
+  <img src="frontend/public/showcase-menu.png" alt="Menu" width="49%" />
+  <img src="frontend/public/showcase-about.png" alt="About" width="49%" />
+</div>
+
+<br />
+
+# Login & Reservations
+
+<div align="center">
+  <img src="frontend/public/showcase-login.png" alt="Login Page" width="49%" />
+  <img src="frontend/public/showcase-reservations.png" alt="Reservation Page" width="49%" />
+</div>
+
+<br />
+
+# Admin Page
+
+<div align="center">
+  <img src="frontend/public/showcase-admin-reservations.png" alt="Admin Reservation Management" width="49%" />
+  <img src="frontend/public/showcase-admin-menu.png" alt="Admin Menu Management" width="49%" />
+</div>
+
 ## Project Structure
 
 ```
@@ -62,32 +97,35 @@ SOIRER/
 
 ## Tech Stack
 
-| Layer       | Technology                                        |
-|-------------|----------------------------------------------------|
-| Frontend    | React 19, Vite 8, Tailwind CSS 4, React Router 7  |
-| Backend     | Node.js, Express 5                                 |
-| Database    | MongoDB (Atlas) via Mongoose                       |
-| Auth        | JWT (jsonwebtoken) + bcrypt (password hashing)     |
-| Image Upload| Cloudinary + Multer                                |
-| Security    | Helmet, CORS, express-rate-limit                   |
+| Layer        | Technology                                       |
+| ------------ | ------------------------------------------------ |
+| Frontend     | React 19, Vite 8, Tailwind CSS 4, React Router 7 |
+| Backend      | Node.js, Express 5                               |
+| Database     | MongoDB (Atlas) via Mongoose                     |
+| Auth         | JWT (jsonwebtoken) + bcrypt (password hashing)   |
+| Image Upload | Cloudinary + Multer                              |
+| Security     | Helmet, CORS, express-rate-limit                 |
 
 ---
 
 ## Features
 
 ### Authentication
+
 - **Register** — Create account with first name, last name, username, email, password
 - **Login** — JWT token generation & storage in localStorage
 - **Modal Flow** — unauthenticated users see login modal when clicking "Book a Table"
 - **Profile Dropdown** — click user icon in navbar to see profile menu with sign out
 
 ### Reservations
+
 - **Auto-populated Fields** — guest name automatically pulled from user profile
 - **Form Validation** — date validation (no past dates), time & guest count validation
 - **Protected Routes** — all reservation endpoints require `Authorization: Bearer <token>`
 - **Error Handling** — proper error messages for all failures
 
 ### Restaurant Menu
+
 - **Category Display** — all menu items shown by category with scrollable pills
 - **Image Upload** — via Cloudinary
 
@@ -119,6 +157,7 @@ cp frontend/.env.example frontend/.env
 ```
 
 **Backend** (`.env` at project root):
+
 ```env
 PORT=4000
 MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/soiree?retryWrites=true&w=majority
@@ -131,6 +170,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 **Frontend** (`frontend/.env`):
+
 ```env
 VITE_API_URL=http://localhost:4000/api
 ```
@@ -144,6 +184,7 @@ docker compose up
 ```
 
 Both servers start with hot reload:
+
 - **Frontend** → http://localhost:5173
 - **Backend API** → http://localhost:4000/api
 
@@ -185,6 +226,7 @@ Same `.env` contents as shown above under the Docker section.
 #### Install & Run
 
 **Backend**
+
 ```bash
 # From project root
 npm install
@@ -193,6 +235,7 @@ npm start         # production
 ```
 
 **Frontend**
+
 ```bash
 cd frontend
 npm install
@@ -207,13 +250,14 @@ npm run preview   # Preview production build
 
 ### Users — `/api/users`
 
-| Method | Endpoint  | Auth | Body                                              |
-|--------|-----------|------|---------------------------------------------------|
-| POST   | `/register` | No | `firstName`, `lastName`, `username`, `email`, `password` |
-| POST   | `/login`    | No | `email`, `password` → returns `token` + `user` |
-| POST   | `/logout`   | No | `email`                                           |
+| Method | Endpoint    | Auth | Body                                                     |
+| ------ | ----------- | ---- | -------------------------------------------------------- |
+| POST   | `/register` | No   | `firstName`, `lastName`, `username`, `email`, `password` |
+| POST   | `/login`    | No   | `email`, `password` → returns `token` + `user`           |
+| POST   | `/logout`   | No   | `email`                                                  |
 
 **Response (Login/Register)**
+
 ```json
 {
   "message": "Login successful",
@@ -232,30 +276,32 @@ npm run preview   # Preview production build
 
 **All routes require:** `Authorization: Bearer <token>` header.
 
-| Method | Endpoint        | Description                    |
-|--------|-----------------|--------------------------------|
-| POST   | `/create`       | Create a reservation           |
-| GET    | `/all`          | Fetch all reservations         |
-| PATCH  | `/update/:id`   | Update a reservation           |
-| DELETE | `/delete/:id`   | Delete a reservation           |
+| Method | Endpoint      | Description            |
+| ------ | ------------- | ---------------------- |
+| POST   | `/create`     | Create a reservation   |
+| GET    | `/all`        | Fetch all reservations |
+| PATCH  | `/update/:id` | Update a reservation   |
+| DELETE | `/delete/:id` | Delete a reservation   |
 
 **POST `/create` Body**
+
 ```json
 {
   "reservationDate": "2026-05-15",
   "reservationTime": "19:30",
   "numberOfGuests": 4,
-  "orderedItem": "Vegetarian preferences"  // optional
+  "orderedItem": "Vegetarian preferences" // optional
 }
 ```
 
 **Response**
+
 ```json
 {
   "message": "Reservation created successfully",
   "reservation": {
     "_id": "...",
-    "guestName": "Jane Smith",  // auto-populated
+    "guestName": "Jane Smith", // auto-populated
     "reservationDate": "2026-05-15T00:00:00.000Z",
     "reservationTime": "19:30",
     "numberOfGuests": 4,
@@ -274,6 +320,7 @@ npm run preview   # Preview production build
 ```
 
 **Field Validation**
+
 - `reservationDate` — required, must not be in the past
 - `reservationTime` — required (24-hour format, e.g., "19:30")
 - `numberOfGuests` — required, minimum 1
@@ -281,12 +328,12 @@ npm run preview   # Preview production build
 
 ### Menu — `/api/menu`
 
-| Method | Endpoint | Auth | Description        |
-|--------|----------|------|---------------------|
-| POST   | `/create` | No  | Create menu item   |
-| GET    | `/all`    | No  | Get all menu items |
-| PATCH  | `/update/:id` | No | Update menu item |
-| DELETE | `/delete/:id` | No | Delete menu item |
+| Method | Endpoint      | Auth | Description        |
+| ------ | ------------- | ---- | ------------------ |
+| POST   | `/create`     | No   | Create menu item   |
+| GET    | `/all`        | No   | Get all menu items |
+| PATCH  | `/update/:id` | No   | Update menu item   |
+| DELETE | `/delete/:id` | No   | Delete menu item   |
 
 ---
 
@@ -318,6 +365,7 @@ npm run preview   # Preview production build
 ## Error Handling
 
 Backend returns structured error responses:
+
 ```json
 {
   "message": "User account not found"
@@ -325,6 +373,7 @@ Backend returns structured error responses:
 ```
 
 Status codes:
+
 - `201` — Resource created
 - `200` — Success
 - `400` — Bad request (validation failed)
@@ -338,17 +387,20 @@ Status codes:
 ## Development Notes
 
 ### Token Management
+
 - JWT stored in `localStorage` under keys `soiree_token` and `soiree_user`
 - Token sent in all API requests as `Authorization: Bearer <token>`
 - Token expiration handled by backend (7 days by default)
 - On logout, token + user data cleared from localStorage
 
 ### Database Indexes
+
 - `User.email` — unique
 - `User.username` — unique
 - `Reservation.user` — ref to User
 
 ### Scalability
+
 - Cloudinary integration for image uploads (no local disk storage)
 - MongoDB connection pooling via Mongoose
 - JWT stateless auth (no session storage needed)
